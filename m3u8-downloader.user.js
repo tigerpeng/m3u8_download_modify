@@ -6,8 +6,6 @@
 // @author       Momo707577045
 // @include      *
 // @exclude      http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html
-// @exclude      https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html
-// @exclude      https://www.bilibili.com/*
 // @grant        none
 // @run-at document-start
 // ==/UserScript==
@@ -46,10 +44,14 @@
       success: (fileStr) => {
         if (fileStr.indexOf('.ts') > -1) {
           appendDom()
-          m3u8Target = url
+          /*
+          if(url.indexOf('://')<=0)
+            m3u8Target=window.location.host + url
+          else*/
+            m3u8Target = url
           console.log('【m3u8】----------------------------------------')
           console.log(url)
-          console.log('http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=' + url)
+          console.log('http://app.ournet.club:2021/m3u8_download_modify/index.html?source=' + url)
         }
       }
     })
@@ -132,7 +134,7 @@
     })
 
     m3u8Jump.addEventListener('click', function() {
-      window.open('//blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html?source=' + m3u8Target)
+      window.open('http://app.ournet.club:2021/m3u8_download_modify/index.html?source=' + m3u8Target+'&title='+document.title)
     })
 
     m3u8Append.addEventListener('click', function() {
@@ -144,7 +146,9 @@
         s.parentNode.insertBefore(hm, s);
       })();
       ajax({
+        //好像有安全验证 必须是https?
         url: 'https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html',
+        //url: 'http://app.ournet.club:2021/m3u8_download_modify/index.html',
         success: (fileStr) => {
           let fileList = fileStr.split(`<!--vue 前端框架--\>`);
           let dom = fileList[0];
@@ -154,29 +158,28 @@
 
           if (m3u8Target) {
             script = script.replace(`url: '', // 在线链接`, `url: '${m3u8Target}',`);
+            script = script.replace(`fileName: '', // 下载标题`, `fileName: '${document.title}',`);
           }
 
           // 注入html
           let $section = document.createElement('section')
           $section.innerHTML = `${dom}`
           $section.style.width = '100%'
-          $section.style.height = '100%'
-          $section.style.maxHeight = '800px'
-          $section.style.bottom = '0'
+          $section.style.height = '800px'
+          $section.style.top = '0'
           $section.style.left = '0'
-          $section.style.position = 'absolute'
+          $section.style.position = 'relative'
           $section.style.zIndex = '9999'
-          $section.style.overflowY = 'auto'
           $section.style.backgroundColor = 'white'
           document.body.appendChild($section);
 
           // 加载 ASE 解密
           let $ase = document.createElement('script')
-          $ase.src = 'https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/aes-decryptor.js'
+          $ase.src = 'http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/aes-decryptor.js'
 
           // 加载 mp4 转码
           let $mp4 = document.createElement('script')
-          $mp4.src = 'https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/mux-mp4.js'
+          $mp4.src = 'http://blog.luckly-mjw.cn/tool-show/m3u8-downloader/mux-mp4.js'
 
           // 加载 vue
           let $vue = document.createElement('script')
