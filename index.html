@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="author" content="毛静文,Momo,copyleft">
-  <meta name="keywords" content="m3u8 下载工具, 毛静文的博客,Momo's Blog">
+  <meta name="keywords" content="m3u8 下载工具">
   <meta name="description" content="m3u8 下载工具,无需下载软件,打开网站即可下载,自动检测,一键下载">
   <title>m3u8 downloader</title>
   <style>
@@ -478,7 +478,7 @@ new Vue({
       if (href.indexOf('?source=') > -1) {
       this.url = href.split('?source=')[1]
       this.fileName=decodeURIComponent(this.url.split('&title=')[1])
-      this.url=this.url.split('&title=')[0]
+      this.url=decodeURIComponent(this.url.split('&title=')[0])
       }
     },
 
