@@ -336,11 +336,13 @@
 <body>
 <div id="loading">
   页面加载中，请耐心等待...
+  <!--
   <h1 style="white-space: pre;">
     推荐一个 m3u8 网页版提取工具，无需下载软件，打开网站即可下载，自动检测，一键下载。
     工具链接：https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html
     工具教程：https://segmentfault.com/a/1190000021847172?_ea=32289224
   </h1>
+  -->
 </div>
 <section id="m-app" v-cloak>
   <!--顶部操作提示-->
@@ -360,6 +362,10 @@
 
   <!--文件载入-->
   <div class="m-p-temp-url">测试链接：http://1257120875.vod2.myqcloud.com/0ef121cdvodtransgzp1257120875/3055695e5285890780828799271/v.f230.m3u8</div>
+  <section class="m-p-input-container">
+    <input type="text" v-model="fileName" :disabled="downloading" placeholder="请输入保存的文件名">
+  </section>
+
   <section class="m-p-input-container">
     <input type="text" v-model="url" :disabled="downloading" placeholder="请输入 m3u8 链接">
 
@@ -420,11 +426,12 @@ new Vue({
   data() {
     return {
       url: '', // 在线链接
+      fileName: '', // 下载标题
       tips: 'm3u8 视频在线提取工具', // 顶部提示
       isPause: false, // 是否暂停下载
       isGetMP4: false, // 是否转码为 MP4 下载
       durationSecond: 0, // 视频持续时长
-      isShowRefer: true, // 是否显示推送
+      isShowRefer: false, // 是否显示推送
       downloading: false, // 是否下载中
       beginTime: '', // 开始下载的时间
       errorNum: 0, // 错误数
@@ -627,7 +634,7 @@ new Vue({
 
     // 获取AES配置
     getAES() {
-      alert('视频被 AES 加密，点击确认，进行视频解码')
+      //alert('视频被 AES 加密，点击确认，进行视频解码')
       this.ajax({
         type: 'file',
         url: this.aesConf.uri,
@@ -693,7 +700,8 @@ new Vue({
         this.finishList[index].status = 'finish'
         this.finishNum++
         if (this.finishNum === this.rangeDownload.targetSegment) {
-          this.downloadFile(this.mediaFileList, this.formatTime(this.beginTime, 'YYYY_MM_DD hh_mm_ss'))
+          //this.downloadFile(this.mediaFileList, this.formatTime(this.beginTime, 'YYYY_MM_DD hh_mm_ss'))
+          this.downloadFile(this.mediaFileList, this.fileName)
         }
         callback && callback()
       })
@@ -825,6 +833,7 @@ new Vue({
 
             if (this.url) {
               script = script.replace(`url: '', // 在线链接`, `url: '${this.url}',`);
+              script = script.replace(`fileName: '', // 下载标题`, `fileName: '${document.title}',`);
             }
 
             let codeStr = `
