@@ -134,7 +134,9 @@
     })
 
     m3u8Jump.addEventListener('click', function() {
-      window.open('http://app.ournet.club:2021/m3u8_download_modify/index.html?source=' + m3u8Target+'&title='+document.title)
+      var docTitle=document.title.split("-")[0]
+      docTitle = docTitle.replace(/^\s*|\s*$/g,"");
+      window.open('http://app.ournet.club:2021/m3u8_download_modify/index.html?source=' + m3u8Target+'&title='+docTitle)
     })
 
     m3u8Append.addEventListener('click', function() {
